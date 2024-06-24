@@ -50,7 +50,7 @@ post.post("/api/posts", async (c) => {
     description: param.description,
   };
 
-  todoList.push(newPost);
+  PostData.push(newPost);
 
   return c.json({ message: "Successfully created" }, 200);
 });

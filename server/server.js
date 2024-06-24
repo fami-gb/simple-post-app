@@ -6,33 +6,20 @@ const post = new Hono();
 
 post.use(cors({ origin: "*" }));
 
-let PostData = [
-  { id: "1", title: "投稿タイトル1", description: "内容が入る" },
-  { id: "2", title: "投稿タイトル2", description: "内容が入る" },
-  { id: "3", title: "投稿タイトル3", description: "内容が入る" },
-  { id: "4", title: "投稿タイトル4", description: "内容が入る" },
-  { id: "5", title: "投稿タイトル5", description: "内容が入る" },
-  { id: "6", title: "投稿タイトル6", description: "内容が入る" },
-  { id: "7", title: "投稿タイトル7", description: "内容が入る" },
-  { id: "8", title: "投稿タイトル8", description: "内容が入る" },
-  { id: "9", title: "投稿タイトル9", description: "内容が入る" },
-  { id: "10", title: "投稿タイトル10", description: "内容が入る" },
-  { id: "11", title: "投稿タイトル11", description: "内容が入る" },
-];
-
 let currentId = 1;
+const PAGE_SIZE = 10;
+
+const postsData = [];
 
 post.get("/api/posts", (c) => {
   const page = c.req.query("page") || 1;
-  // 1ページあたりの最大投稿件数
-  const pageSize = 10;
   
   // 表示するデータの範囲
-  const startIndex = (page - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
+  const startIndex = (page - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
 
   // ページ毎にデータを分ける
-  const splitedPosts = PostData.slice(startIndex, endIndex);
+  const splitedPosts = postsData.slice(startIndex, endIndex);
 
    return c.json(splitedPosts, 200)
 });
@@ -40,19 +27,24 @@ post.get("/api/posts", (c) => {
 post.post("/api/posts", async (c) => {
   const param = await c.req.json();
 
-  if (!param.title) {
-    throw new Error("Title must be provided");
+  if (!param.question) {
+    throw new HttpException(400, { message: "Question must be provided" });
   }
 
   const newPost = {
     id: String(currentId++),
-    title: param.title,
-    description: param.description,
+    question: param.question,
   };
 
-  PostData.push(newPost);
+  postsData.push(newPost);
 
   return c.json({ message: "Successfully created" }, 200);
+});
+
+post.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return err.getResponse()
+  }
 });
 
 serve({

@@ -2,9 +2,12 @@ import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 
+const PAGE_SIZE = 10;
+
 const post = new Hono();
 
 post.use(cors({ origin: "*" }));
+
 
 let currentId = 1;
 const PAGE_SIZE = 10;

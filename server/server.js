@@ -4,18 +4,19 @@ import { cors } from 'hono/cors';
 
 const PAGE_SIZE = 10;
 
-const post = new Hono();
+const postApp = new Hono();
 
 post.use(cors({ origin: "*" }));
 
-
 let currentId = 1;
-const PAGE_SIZE = 10;
 
 const postsData = [];
 
-post.get("/api/posts", (c) => {
+postApp.get("/api/posts", (c) => {
   const page = c.req.query("page") || 1;
+  if (!page) {
+    throw new HttpException(400, { message: "Query not Found" });
+  }
   
   // 表示するデータの範囲
   const startIndex = (page - 1) * PAGE_SIZE;
@@ -27,7 +28,7 @@ post.get("/api/posts", (c) => {
    return c.json(splitedPosts, 200)
 });
 
-post.post("/api/posts", async (c) => {
+postApp.post("/api/posts", async (c) => {
   const param = await c.req.json();
 
   if (!param.question) {
@@ -44,7 +45,7 @@ post.post("/api/posts", async (c) => {
   return c.json({ message: "Successfully created" }, 200);
 });
 
-post.onError((err, c) => {
+postApp.onError((err, c) => {
   if (err instanceof HTTPException) {
     return err.getResponse()
   }

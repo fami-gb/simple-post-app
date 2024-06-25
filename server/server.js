@@ -6,7 +6,7 @@ const PAGE_SIZE = 10;
 
 const postApp = new Hono();
 
-post.use(cors({ origin: "*" }));
+postApp.use(cors({ origin: "*" }));
 
 let currentId = 1;
 
@@ -17,13 +17,18 @@ postApp.get("/api/posts", (c) => {
   if (!page) {
     throw new HttpException(400, { message: "Query not Found" });
   }
-  
+
   // 表示するデータの範囲
   const startIndex = (page - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
 
   // ページ毎にデータを分ける
   const splitedPosts = postsData.slice(startIndex, endIndex);
+
+  // 日付(新しい)順にする。
+  splitedPosts.sort((a, b) => {
+    return a.Date < b.Date ? 1 : -1;
+  });
 
    return c.json(splitedPosts, 200)
 });
@@ -37,6 +42,7 @@ postApp.post("/api/posts", async (c) => {
 
   const newPost = {
     id: String(currentId++),
+    Date: new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }),
     question: param.question,
   };
 
@@ -52,6 +58,6 @@ postApp.onError((err, c) => {
 });
 
 serve({
-  fetch: post.fetch,
+  fetch: postApp.fetch,
   port: 8000,
 });

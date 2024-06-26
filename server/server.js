@@ -13,7 +13,7 @@ let currentId = 1;
 const postsData = [];
 
 postApp.get("/api/posts", (c) => {
-  const page = c.req.query("page") || 1;
+  const page = c.req.query("page");
   if (!page) {
     throw new HttpException(400, { message: "Query 'page' must be provided" });
   }

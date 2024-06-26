@@ -15,7 +15,7 @@ const postsData = [];
 postApp.get("/api/posts", (c) => {
   const page = c.req.query("page") || 1;
   if (!page) {
-    throw new HttpException(400, { message: "Query not Found" });
+    throw new HttpException(400, { message: "Query 'page' must be provided" });
   }
 
   // 表示するデータの範囲
@@ -42,7 +42,7 @@ postApp.post("/api/posts", async (c) => {
 
   const newPost = {
     id: String(currentId++),
-    Date: new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }),
+    Date: new Date(),
     question: param.question,
   };
 

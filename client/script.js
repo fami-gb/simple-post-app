@@ -3,10 +3,9 @@ let currentPage = 1;
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 
-const fetchAndDisplayPosts = async (page=1) => {
+const fetchAndDisplayPosts = async (page) => {
     // ページ数が1のとき前へボタンを無効にする。
-    let disabledFlag = false;
-    (page == 1) ? disabledFlag = true : disabledFlag = false;
+    let disabledFlag = (page == 1);
     prevBtn.disabled = disabledFlag;
 
     const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));

@@ -4,6 +4,11 @@ const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 
 const fetchAndDisplayPosts = async (page=1) => {
+    // ページ数が1のとき前へボタンを無効にする。
+    let disabledFlag = false;
+    (page == 1) ? disabledFlag = true : disabledFlag = false;
+    prevBtn.disabled = disabledFlag;
+
     const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));
     const postList = await response.json();
     const postListElement = document.getElementById("post-list");

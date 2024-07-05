@@ -13,7 +13,7 @@ const fetchAndDisplayPosts = async (page) => {
     const postListElement = document.getElementById("post-list");
     postListElement.innerHTML = "";
 
-    if (Object.keys(postList).length  === 0) {
+    if (Object.keys(postList).length === 0) {
         // 「次へ」ボタンの処理
         // 納期がやばいので後々考えることにする。
     }

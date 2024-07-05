@@ -14,6 +14,10 @@ const fetchAndDisplayPosts = async (page=1) => {
     const postListElement = document.getElementById("post-list");
     postListElement.innerHTML = "";
 
+    if (Object.keys(postList).length  === 0) {
+        // 「次へ」ボタンの処理
+    }
+
     postList.forEach((post) => {
         const paraElement1 = document.createElement("div");
         paraElement1.innerHTML = post.question;

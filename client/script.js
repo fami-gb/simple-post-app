@@ -45,4 +45,4 @@ nextBtn.addEventListener("click", () => {
     fetchAndDisplayPosts(currentPage);
 });
 
-document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts());
+document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts(1));

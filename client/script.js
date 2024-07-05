@@ -16,6 +16,7 @@ const fetchAndDisplayPosts = async (page=1) => {
 
     if (Object.keys(postList).length  === 0) {
         // 「次へ」ボタンの処理
+        // 納期がやばいので後々考えることにする。
     }
 
     postList.forEach((post) => {

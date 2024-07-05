@@ -1,3 +1,8 @@
+let currentPage = 1;
+
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+
 const fetchAndDisplayPosts = async (page=1) => {
     const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));
     const postList = await response.json();
@@ -17,15 +22,18 @@ const fetchAndDisplayPosts = async (page=1) => {
 
         postListElement.appendChild(postElement);
     });
+
+    currentPage = page;
 };
 // 次へ、前へのボタンで(1,2,3) => (2,3,4)のようにしてページネーションを実現する
-// 今は取り敢えず3ページ分だけ実装しておく
-var btn = new Array();
-for (let i = 1; i < 4; i++){
-    btn[i] = document.getElementById("btn" + String(i));
-    btn[i].addEventListener("click", () => {
-        fetchAndDisplayPosts(i);
-    });
-}
+// 今は取り敢えず「前へ」「次へ」のみでページネーションを実現させる。
+prevBtn.addEventListener("click", () => {
+    currentPage--;
+    fetchAndDisplayPosts(currentPage);
+});
+nextBtn.addEventListener("click", () => {
+    currentPage++;
+    fetchAndDisplayPosts(currentPage);
+});
 
 document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts());

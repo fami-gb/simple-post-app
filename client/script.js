@@ -5,8 +5,7 @@ const nextBtn = document.getElementById("next");
 
 const fetchAndDisplayPosts = async (page) => {
     // ページ数が1のとき前へボタンを無効にする。
-    let disabledFlag = (page == 1);
-    prevBtn.disabled = disabledFlag;
+    prevBtn.disabled = (page == 1);
 
     const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));
     const postList = await response.json();

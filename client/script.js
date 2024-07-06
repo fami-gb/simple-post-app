@@ -4,18 +4,14 @@ const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 
 const fetchAndDisplayPosts = async (page) => {
-    // ページ数が1のとき前へボタンを無効にする。
-    prevBtn.disabled = (page == 1);
-
     const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));
     const postList = await response.json();
     const postListElement = document.getElementById("post-list");
     postListElement.innerHTML = "";
 
-    if (Object.keys(postList).length === 0) {
-        // 「次へ」ボタンの処理
-        // 納期がやばいので後々考えることにする。
-    }
+    // ボタンの無効処理
+    prevBtn.disabled = (page == 1);
+    nextBtn.disabled = (Object.keys(postList).length === 0);
 
     postList.forEach((post) => {
         const paraElement1 = document.createElement("div");

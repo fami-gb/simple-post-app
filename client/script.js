@@ -26,8 +26,6 @@ const fetchAndDisplayPosts = async (page) => {
 
         postListElement.appendChild(postElement);
     });
-
-    currentPage = page;
 };
 // 次へ、前へのボタンで(1,2,3) => (2,3,4)のようにしてページネーションを実現する
 // 今は取り敢えず「前へ」「次へ」のみでページネーションを実現させる。

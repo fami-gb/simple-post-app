@@ -18,7 +18,8 @@ const fetchAndDisplayPosts = async (page) => {
         paraElement1.innerHTML = post.question;
 
         const paraElement2 = document.createElement("div");
-        paraElement2.innerHTML = post.Date;
+        const date = new Date(post.Date);
+        paraElement2.innerHTML = date.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo"});
 
         const postElement = document.createElement("div");
         postElement.appendChild(paraElement1);

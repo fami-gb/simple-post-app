@@ -1,5 +1,6 @@
 let currentPage = 1;
 
+const submitBtn = document.getElementById("submit");
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 
@@ -37,6 +38,15 @@ prevBtn.addEventListener("click", () => {
 nextBtn.addEventListener("click", () => {
     currentPage++;
     fetchAndDisplayPosts(currentPage);
+});
+
+submitBtn.addEventListener("click", async () => {
+    const qText = (document.getElementById("qbox")).value;
+    await fetch("http://localhost:8000/api/posts", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({"question": qText}),
+    });
 });
 
 document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts(1));

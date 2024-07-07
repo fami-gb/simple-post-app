@@ -47,6 +47,7 @@ submitBtn.addEventListener("click", async () => {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({"question": qText}),
     });
+    fetchAndDisplayPosts(currentPage);
 });
 
 document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts(1));

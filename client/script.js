@@ -41,7 +41,7 @@ nextBtn.addEventListener("click", () => {
 });
 
 submitBtn.addEventListener("click", async () => {
-    let qText = document.getElementById("qbox");
+    const qText = document.getElementById("qbox");
     await fetch("http://localhost:8000/api/posts", {
         method: "POST",
         headers: {"Content-Type": "application/json"},

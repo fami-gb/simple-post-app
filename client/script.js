@@ -41,12 +41,13 @@ nextBtn.addEventListener("click", () => {
 });
 
 submitBtn.addEventListener("click", async () => {
-    const qText = (document.getElementById("qbox")).value;
+    let qText = document.getElementById("qbox");
     await fetch("http://localhost:8000/api/posts", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({"question": qText}),
+        body: JSON.stringify({"question": qText.value}),
     });
+    qText.value = "";
     fetchAndDisplayPosts(currentPage);
 });
 

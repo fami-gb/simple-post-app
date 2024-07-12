@@ -11,8 +11,8 @@ const fetchAndDisplayPosts = async (page) => {
     postListElement.innerHTML = "";
 
     // ボタンの無効処理
-    prevBtn.disabled = (page == 1);
-    nextBtn.disabled = (Object.keys(postList).length === 0);
+    prevBtnElement.disabled = (page == 1);
+    nextBtnElemnt.disabled = (Object.keys(postList).length === 0);
 
     postList.forEach((post) => {
         const paraElement1 = document.createElement("div");

@@ -1,8 +1,8 @@
 let currentPage = 1;
 
-const submitBtn = document.getElementById("submit");
-const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
+const submitBtnElement = document.getElementById("submit");
+const nextBtnElemnt = document.getElementById("next");
+const prevBtnElement = document.getElementById("prev");
 
 const fetchAndDisplayPosts = async (page) => {
     const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));
@@ -41,13 +41,13 @@ nextBtn.addEventListener("click", () => {
 });
 
 submitBtn.addEventListener("click", async () => {
-    const qText = document.getElementById("qbox");
+    const qTextElement = document.getElementById("qbox");
     await fetch("http://localhost:8000/api/posts", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({"question": qText.value}),
+        body: JSON.stringify({"question": qTextElement.value}),
     });
-    qText.value = "";
+    qTextElement.value = "";
     fetchAndDisplayPosts(currentPage);
 });
 

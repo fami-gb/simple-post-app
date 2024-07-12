@@ -31,16 +31,16 @@ const fetchAndDisplayPosts = async (page) => {
 };
 // 次へ、前へのボタンで(1,2,3) => (2,3,4)のようにしてページネーションを実現する
 // 今は取り敢えず「前へ」「次へ」のみでページネーションを実現させる。
-prevBtn.addEventListener("click", () => {
+prevBtnElement.addEventListener("click", () => {
     currentPage--;
     fetchAndDisplayPosts(currentPage);
 });
-nextBtn.addEventListener("click", () => {
+nextBtnElemnt.addEventListener("click", () => {
     currentPage++;
     fetchAndDisplayPosts(currentPage);
 });
 
-submitBtn.addEventListener("click", async () => {
+submitBtnElement.addEventListener("click", async () => {
     const qTextElement = document.getElementById("qbox");
     await fetch("http://localhost:8000/api/posts", {
         method: "POST",

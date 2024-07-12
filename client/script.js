@@ -42,6 +42,7 @@ nextBtnElemnt.addEventListener("click", () => {
 
 submitBtnElement.addEventListener("click", async () => {
     const qTextElement = document.getElementById("qbox");
+    if (!isValid(qTextElement.value)) return;
     await fetch("http://localhost:8000/api/posts", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -50,5 +51,10 @@ submitBtnElement.addEventListener("click", async () => {
     qTextElement.value = "";
     fetchAndDisplayPosts(currentPage);
 });
+
+const isValid = (element) => {
+    // 他の空白時以外のバリデーションも行う可能性があるので関数にまとめておく。
+    return !(element == "");
+}
 
 document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts(1));

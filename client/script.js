@@ -1,7 +1,8 @@
 let currentPage = 1;
 
-const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
+const submitBtnElement = document.getElementById("submit");
+const nextBtnElemnt = document.getElementById("next");
+const prevBtnElement = document.getElementById("prev");
 
 const fetchAndDisplayPosts = async (page) => {
     const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));
@@ -10,8 +11,8 @@ const fetchAndDisplayPosts = async (page) => {
     postListElement.innerHTML = "";
 
     // ボタンの無効処理
-    prevBtn.disabled = (page == 1);
-    nextBtn.disabled = (Object.keys(postList).length === 0);
+    prevBtnElement.disabled = (page == 1);
+    nextBtnElemnt.disabled = (Object.keys(postList).length === 0);
 
     postList.forEach((post) => {
         const paraElement1 = document.createElement("div");
@@ -30,13 +31,30 @@ const fetchAndDisplayPosts = async (page) => {
 };
 // 次へ、前へのボタンで(1,2,3) => (2,3,4)のようにしてページネーションを実現する
 // 今は取り敢えず「前へ」「次へ」のみでページネーションを実現させる。
-prevBtn.addEventListener("click", () => {
+prevBtnElement.addEventListener("click", () => {
     currentPage--;
     fetchAndDisplayPosts(currentPage);
 });
-nextBtn.addEventListener("click", () => {
+nextBtnElemnt.addEventListener("click", () => {
     currentPage++;
     fetchAndDisplayPosts(currentPage);
 });
+
+submitBtnElement.addEventListener("click", async () => {
+    const qTextElement = document.getElementById("qbox");
+    if (!isValid(qTextElement.value)) return;
+    await fetch("http://localhost:8000/api/posts", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({"question": qTextElement.value}),
+    });
+    qTextElement.value = "";
+    fetchAndDisplayPosts(currentPage);
+});
+
+const isValid = (element) => {
+    // 他の空白時以外のバリデーションも行う可能性があるので関数にまとめておく。
+    return !(element == "");
+}
 
 document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts(1));

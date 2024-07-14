@@ -9,6 +9,7 @@ const postApp = new Hono();
 postApp.use(cors({ origin: "*" }));
 
 let currentId = 1;
+let postCounter = 0;
 
 const postsData = [];
 
@@ -30,7 +31,9 @@ postApp.get("/api/posts", (c) => {
     return a.Date < b.Date ? 1 : -1;
   });
 
-   return c.json(splitedPosts, 200)
+  postCounter = Object.keys(postsData).length;
+
+  return c.json(splitedPosts, 200)
 });
 
 postApp.post("/api/posts", async (c) => {
@@ -49,6 +52,10 @@ postApp.post("/api/posts", async (c) => {
   postsData.push(newPost);
 
   return c.json({ message: "Successfully created" }, 200);
+});
+
+postApp.get("/api/posts/count", (c) => {
+  return c.json({ count: postCounter }, 200);
 });
 
 postApp.onError((err, c) => {

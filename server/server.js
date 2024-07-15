@@ -51,8 +51,8 @@ postApp.post("/api/posts", async (c) => {
 });
 
 postApp.get("/api/posts/count", (c) => {
-  const postCounter = Object.keys(postsData).length;
-  return c.json({ count: postCounter }, 200);
+  const postsCount = Object.keys(postsData).length;
+  return c.json({ count: postsCount }, 200);
 });
 
 postApp.onError((err, c) => {

@@ -57,7 +57,7 @@ postApp.get("/api/posts/count", (c) => {
 
 postApp.onError((err, c) => {
   if (err instanceof HTTPException) {
-    return err.getResponse()
+    return err.getResponse();
   }
 });
 

@@ -29,8 +29,7 @@ postApp.get("/api/posts", (c) => {
   splitedPosts.sort((a, b) => {
     return a.Date < b.Date ? 1 : -1;
   });
-
-   return c.json(splitedPosts, 200)
+  return c.json(splitedPosts, 200)
 });
 
 postApp.post("/api/posts", async (c) => {
@@ -51,9 +50,14 @@ postApp.post("/api/posts", async (c) => {
   return c.json({ message: "Successfully created" }, 200);
 });
 
+postApp.get("/api/posts/count", (c) => {
+  const postsCount = postsData.length;
+  return c.json({ count: postsCount }, 200);
+});
+
 postApp.onError((err, c) => {
   if (err instanceof HTTPException) {
-    return err.getResponse()
+    return err.getResponse();
   }
 });
 

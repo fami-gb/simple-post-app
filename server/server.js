@@ -16,6 +16,11 @@ postApp.get("/api/posts", (c) => {
   const offset = parseInt(c.req.query("offset") || 0, 10);
   const limits = parseInt(c.req.query("limits") || PAGE_SIZE, 10);
 
+  // 型バリデーション
+  if (!Number.isInteger(offset) || !Number.isInteger(limits)) {
+    throw new HttpException(400, { message: "either offset or limits has invalid data type" });
+  }
+
   // ページ毎にデータを分ける
   const splitedPosts = postsData.slice(offset, offset + limits);
 

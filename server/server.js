@@ -13,12 +13,15 @@ let currentId = 1;
 const postsData = [];
 
 postApp.get("/api/posts", (c) => {
-  const offset = parseInt(c.req.query("offset") || 0, 10);
-  const limits = parseInt(c.req.query("limits") || PAGE_SIZE, 10);
+  const offset = c.req.query("offset");
+  const limits = c.req.query("limits");
 
   // 型バリデーション
-  if (!Number.isInteger(offset) || !Number.isInteger(limits)) {
-    throw new HttpException(400, { message: "either offset or limits has invalid data type" });
+  if (isNaN(offset) || !Number.isInteger(offset)) {
+    throw new HttpException(400, { message: "offset has invalid data type" });
+  }
+  if (isNaN(limits) || !Number.isInteger(limits)) {
+    throw new HttpException(400, { message: "'limits' has invalid data type" })
   }
 
   // ページ毎にデータを分ける

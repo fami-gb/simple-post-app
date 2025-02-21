@@ -31,11 +31,11 @@ const fetchAndDisplayPosts = async (offset=0) => {
 // 次へ、前へのボタンで(1,2,3) => (2,3,4)のようにしてページネーションを実現する
 // 今は取り敢えず「前へ」「次へ」のみでページネーションを実現させる。
 prevBtnElement.addEventListener("click", () => {
-    offset -= 10;
+    offset -= PAGE_SIZE;
     fetchAndDisplayPosts(offset);
 });
 nextBtnElemnt.addEventListener("click", () => {
-    offset += 10;
+    offset += PAGE_SIZE;
     fetchAndDisplayPosts(offset);
 });
 

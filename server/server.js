@@ -13,8 +13,8 @@ let currentId = 1;
 const postsData = [];
 
 postApp.get("/api/posts", (c) => {
-  const offset = c.req.query("offset");
-  const limits = c.req.query("limits");
+  const offset = parseInt(c.req.query("offset") || 0, 10);
+  const limits = parseInt(c.req.query("limits") || 10, 10);
 
   // 型バリデーション
   if (isNaN(offset) || !Number.isInteger(offset)) {

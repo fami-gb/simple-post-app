@@ -13,17 +13,11 @@ let currentId = 1;
 const postsData = [];
 
 postApp.get("/api/posts", (c) => {
-  const page = c.req.query("page");
-  if (!page) {
-    throw new HttpException(400, { message: "Query 'page' must be provided" });
-  }
-
-  // 表示するデータの範囲
-  const startIndex = (page - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
+  const offset = parseInt(c.req.query("offset") || 0, 10);
+  const limits = parseInt(c.req.query("limits") || PAGE_SIZE, 10);
 
   // ページ毎にデータを分ける
-  const splitedPosts = postsData.slice(startIndex, endIndex);
+  const splitedPosts = postsData.slice(offset, offset + limits);
 
   // 日付(新しい)順にする。
   splitedPosts.sort((a, b) => {

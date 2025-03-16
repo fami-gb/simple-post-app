@@ -2,7 +2,7 @@ let offset = 0;
 const PAGE_SIZE = 10;
 
 const submitBtnElement = document.getElementById("submit");
-const nextBtnElemnt = document.getElementById("next");
+const nextBtnElement = document.getElementById("next");
 const prevBtnElement = document.getElementById("prev");
 
 const fetchAndDisplayPosts = async (offset=0) => {
@@ -11,7 +11,14 @@ const fetchAndDisplayPosts = async (offset=0) => {
     const postListElement = document.getElementById("post-list");
     postListElement.innerHTML = "";
 
-    prevBtnElement.disabled = offset === 1
+    prevBtnElement.disabled = offset == 0;
+    nextBtnElement.disabled = Object.keys(postList).length < 10;
+    if (Object.keys(postList).length === 0) {
+        nextBtnElement.disabled = false;
+        offset -= 10;
+        fetchAndDisplayPosts(offset);
+        return;
+    }
 
     postList.forEach((post) => {
         const paraElement1 = document.createElement("div");
@@ -34,7 +41,7 @@ prevBtnElement.addEventListener("click", () => {
     offset -= PAGE_SIZE;
     fetchAndDisplayPosts(offset);
 });
-nextBtnElemnt.addEventListener("click", () => {
+nextBtnElement.addEventListener("click", () => {
     offset += PAGE_SIZE;
     fetchAndDisplayPosts(offset);
 });
@@ -48,7 +55,7 @@ submitBtnElement.addEventListener("click", async () => {
         body: JSON.stringify({"question":qTextElement.value}),
     });
     qTextElement.value = "";
-    fetchAndDisplayPosts();
+    fetchAndDisplayPosts(offset);
 });
 
 document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts());

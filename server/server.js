@@ -1,6 +1,8 @@
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
+import { vValidator } from "@hono/valibot-validator";
+import * as v from "valibot";
 
 const PAGE_SIZE = 10;
 
@@ -12,17 +14,28 @@ let currentId = 1;
 
 const postsData = [];
 
-postApp.get("/api/posts", (c) => {
-  const offset = parseInt(c.req.query("offset") || 0, 10);
-  const limits = parseInt(c.req.query("limits") || 10, 10);
+const schema = v.object({
+  offset: v.pipe(
+    v.string(),
+    v.transform((value) => {
+      const num = parseInt(value, 10);
+      if (isNaN(num)) throw new Error('offset must be a valid number');
+      return num;
+    })
+  ),
+  limits: v.pipe(
+    v.string(),
+    v.transform((value) => {
+      const num = parseInt(value, 10);
+      if (isNaN(num)) throw new Error('limits must be valid number');
+      return num;
+    })
+  )
+})
 
-  // 型バリデーション
-  if (isNaN(offset) || !Number.isInteger(offset)) {
-    throw new HttpException(400, { message: "offset has invalid data type" });
-  }
-  if (isNaN(limits) || !Number.isInteger(limits)) {
-    throw new HttpException(400, { message: "'limits' has invalid data type" })
-  }
+postApp.get("/api/posts", vValidator("query", schema), (c) => {
+  const offset = c.req.query("offset") || 0;
+  const limits = c.req.query("limits") || PAGE_SIZE;
 
   // ページ毎にデータを分ける
   const splitedPosts = postsData.slice(offset, offset + limits);

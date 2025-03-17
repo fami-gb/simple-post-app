@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 import { vValidator } from "@hono/valibot-validator";
+import { HTTPException } from 'hono/http-exception';
 import * as v from "valibot";
 
 const PAGE_SIZE = 10;
@@ -18,20 +19,22 @@ const schema = v.object({
   offset: v.pipe(
     v.string(),
     v.transform((value) => {
-      const num = parseInt(value, 10);
-      if (isNaN(num)) throw new Error('offset must be a valid number');
+      const num = parseFloat(value);
+      if (!isInt(value, num)) throw new HTTPException(400, { message: 'offset must be a valid number' });
       return num;
     })
   ),
   limits: v.pipe(
     v.string(),
     v.transform((value) => {
-      const num = parseInt(value, 10);
-      if (isNaN(num)) throw new Error('limits must be valid number');
+      const num = parseFloat(value);
+      if (!isInt(value, num)) throw new HTTPException(400, { message: 'limits must be valid number' });
       return num;
     })
   )
 })
+
+const isInt = (value, num) => { return !isNaN(value) && (num | 0) === num };
 
 postApp.get("/api/posts", vValidator("query", schema), (c) => {
   const offset = c.req.query("offset") || 0;
@@ -51,7 +54,7 @@ postApp.post("/api/posts", async (c) => {
   const param = await c.req.json();
 
   if (!param.question) {
-    throw new HttpException(400, { message: "Question must be provided" });
+    throw new HTTPException(400, { message: "Question must be provided" });
   }
 
   const newPost = {

@@ -1,18 +1,24 @@
-let currentPage = 1;
+let offset = 0;
+const PAGE_SIZE = 10;
 
 const submitBtnElement = document.getElementById("submit");
-const nextBtnElemnt = document.getElementById("next");
+const nextBtnElement = document.getElementById("next");
 const prevBtnElement = document.getElementById("prev");
 
-const fetchAndDisplayPosts = async (page) => {
-    const response = await fetch("http://localhost:8000/api/posts?page=" + String(page));
+const fetchAndDisplayPosts = async (offset=0) => {
+    const response = await fetch(`http://localhost:8000/api/posts?offset=${offset}&limits=${PAGE_SIZE}`);
     const postList = await response.json();
     const postListElement = document.getElementById("post-list");
     postListElement.innerHTML = "";
 
-    // ボタンの無効処理
-    prevBtnElement.disabled = (page == 1);
-    nextBtnElemnt.disabled = (Object.keys(postList).length === 0);
+    prevBtnElement.disabled = offset == 0;
+    nextBtnElement.disabled = Object.keys(postList).length < 10;
+    if (Object.keys(postList).length === 0) {
+        nextBtnElement.disabled = false;
+        offset -= 10;
+        fetchAndDisplayPosts(offset);
+        return;
+    }
 
     postList.forEach((post) => {
         const paraElement1 = document.createElement("div");
@@ -32,29 +38,24 @@ const fetchAndDisplayPosts = async (page) => {
 // 次へ、前へのボタンで(1,2,3) => (2,3,4)のようにしてページネーションを実現する
 // 今は取り敢えず「前へ」「次へ」のみでページネーションを実現させる。
 prevBtnElement.addEventListener("click", () => {
-    currentPage--;
-    fetchAndDisplayPosts(currentPage);
+    offset -= PAGE_SIZE;
+    fetchAndDisplayPosts(offset);
 });
-nextBtnElemnt.addEventListener("click", () => {
-    currentPage++;
-    fetchAndDisplayPosts(currentPage);
+nextBtnElement.addEventListener("click", () => {
+    offset += PAGE_SIZE;
+    fetchAndDisplayPosts(offset);
 });
 
 submitBtnElement.addEventListener("click", async () => {
     const qTextElement = document.getElementById("qbox");
-    if (!isValid(qTextElement.value)) return;
+    if (!qTextElement) return;
     await fetch("http://localhost:8000/api/posts", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({"question": qTextElement.value}),
+        body: JSON.stringify({"question":qTextElement.value}),
     });
     qTextElement.value = "";
-    fetchAndDisplayPosts(currentPage);
+    fetchAndDisplayPosts(offset);
 });
 
-const isValid = (element) => {
-    // 他の空白時以外のバリデーションも行う可能性があるので関数にまとめておく。
-    return !(element == "");
-}
-
-document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts(1));
+document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts());

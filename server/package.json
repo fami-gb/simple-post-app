@@ -3,7 +3,9 @@
   "type": "module",
   "dependencies": {
     "@hono/node-server": "^1.11.1",
-    "hono": "^4.3.6"
+    "@hono/valibot-validator": "^0.5.2",
+    "hono": "^4.3.6",
+    "valibot": "^1.0.0-rc.2"
   },
   "scripts": {
     "start": "node server.js"

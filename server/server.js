@@ -37,16 +37,14 @@ const schema = v.object({
 const isInt = (value, num) => { return !isNaN(value) && (num | 0) === num };
 
 postApp.get("/api/posts", vValidator("query", schema), (c) => {
-  const offset = c.req.query("offset") || 0;
-  const limits = c.req.query("limits") || PAGE_SIZE;
+  const offset = parseInt(c.req.query("offset") || 0);
+  const limits = parseInt(c.req.query("limits") || PAGE_SIZE);
 
+  // 日付(新しい)順にする。
+  postsData.sort((a, b) => { return a.Date < b.Date ? 1 : -1 });
   // ページ毎にデータを分ける
   const splitedPosts = postsData.slice(offset, offset + limits);
 
-  // 日付(新しい)順にする。
-  splitedPosts.sort((a, b) => {
-    return a.Date < b.Date ? 1 : -1;
-  });
   return c.json(splitedPosts, 200)
 });
 

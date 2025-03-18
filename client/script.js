@@ -5,20 +5,16 @@ const submitBtnElement = document.getElementById("submit");
 const nextBtnElement = document.getElementById("next");
 const prevBtnElement = document.getElementById("prev");
 
-const fetchAndDisplayPosts = async (offset=0) => {
+const fetchAndDisplayPosts = async () => {
     const response = await fetch(`http://localhost:8000/api/posts?offset=${offset}&limits=${PAGE_SIZE}`);
     const postList = await response.json();
     const postListElement = document.getElementById("post-list");
     postListElement.innerHTML = "";
 
-    prevBtnElement.disabled = offset == 0;
-    nextBtnElement.disabled = Object.keys(postList).length < 10;
-    if (Object.keys(postList).length === 0) {
-        nextBtnElement.disabled = false;
-        offset -= 10;
-        fetchAndDisplayPosts(offset);
-        return;
-    }
+    // 前へボタンの無効化
+    prevBtnElement.disabled = offset === 0;
+    // 次へボタンの無効化
+    nextBtnElement.disabled = !(await hasNextPage());
 
     postList.forEach((post) => {
         const paraElement1 = document.createElement("div");
@@ -35,15 +31,20 @@ const fetchAndDisplayPosts = async (offset=0) => {
         postListElement.appendChild(postElement);
     });
 };
-// 次へ、前へのボタンで(1,2,3) => (2,3,4)のようにしてページネーションを実現する
-// 今は取り敢えず「前へ」「次へ」のみでページネーションを実現させる。
+
+const hasNextPage = async () => {
+    const response = await fetch('http://localhost:8000/api/posts/count');
+    const data = await response.json();
+    return (offset + PAGE_SIZE < data.count);
+};
+
 prevBtnElement.addEventListener("click", () => {
     offset -= PAGE_SIZE;
-    fetchAndDisplayPosts(offset);
+    fetchAndDisplayPosts();
 });
 nextBtnElement.addEventListener("click", () => {
     offset += PAGE_SIZE;
-    fetchAndDisplayPosts(offset);
+    fetchAndDisplayPosts();
 });
 
 submitBtnElement.addEventListener("click", async () => {
@@ -55,7 +56,7 @@ submitBtnElement.addEventListener("click", async () => {
         body: JSON.stringify({"question":qTextElement.value}),
     });
     qTextElement.value = "";
-    fetchAndDisplayPosts(offset);
+    fetchAndDisplayPosts();
 });
 
-document.addEventListener("DOMContentLoaded", fetchAndDisplayPosts());
+document.addEventListener("DOMContentLoaded", () => fetchAndDisplayPosts());
